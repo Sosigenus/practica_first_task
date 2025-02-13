@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Maxim
+      changes:
+        - renameColumn:
+            tableName: tasks2
+            oldColumnName: title
+            newColumnName: task_title
+            columnDataType: VARCHAR(255)
