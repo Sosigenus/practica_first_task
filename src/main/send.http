@@ -4,7 +4,10 @@ POST http://localhost:8080/api/v1/students/save_student
 Content-Type: application/json
 
 {
-  "firstName": "Maxim",
-  "lastName": "AFSAXZ",
-  "age": 21
+  "firstName": "{{$random.name.firstName}}",
+  "lastName": "{{$random.name.lastName}}",
+  "dateOfBirth": "1990-01-01",
+  "email": "{{$random.email}}"
+
 }
+

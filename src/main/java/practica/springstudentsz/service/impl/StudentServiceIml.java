@@ -1,41 +1,45 @@
 package practica.springstudentsz.service.impl;
 import practica.springstudentsz.model.Student;
-import practica.springstudentsz.repository.MemoryStudentFun;
+import practica.springstudentsz.repository.StudentRepository;
 import practica.springstudentsz.service.StudentService;
 
-
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class MemoryStudentService implements StudentService {
-    private final MemoryStudentFun repository;
+@Primary
+public class StudentServiceIml implements StudentService {
+    private final StudentRepository repository;
 
     @Override
     public List<Student> findAllStudent() {
-        return repository.findAllStudent();
+        return repository.findAll();
     }
+
     @Override
     public Student saveStudent(Student student) {
-        return repository.saveStudent(student);
+        return repository.save(student);
     }
 
     @Override
     public Student findByEmail(String email) {
-        return repository.findByEmail(email);
+        return repository.findStudentByEmail(email);
     }
 
     @Override
     public Student updateStudent(Student student) {
-        return repository.updateStudent(student);
+        return repository.save(student);
     }
 
     @Override
+    @Transactional
     public void deleteStudent(String email) {
-        repository.deleteStudent(email);
+        repository.deleteByEmail(email);
     }
 }
