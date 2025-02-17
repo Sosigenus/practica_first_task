@@ -1,24 +1,14 @@
 package practica.springstudentsz.mapper;
 
-import practica.springstudentsz.model.Student;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import practica.springstudentsz.dto.DTOclass;
+import practica.springstudentsz.model.Student;
 
-public class StudentMapper {
-    public static DTOclass toDTO(Student student) {
-        DTOclass dto = new DTOclass();
-        dto.setFirstName(student.getFirstName());
-        dto.setLastName(student.getLastName());
-        dto.setDateOfBirth(student.getDateOfBirth());
-        dto.setEmail(student.getEmail());
-        return dto;
-    }
+@Mapper(componentModel = "spring")
+public interface StudentMapper {
+//    StudentMapper INSTANCE = Mappers.getMapper(StudentMapper.class);
 
-    public static Student toEntity(DTOclass dto) {
-        Student student = new Student();
-        student.setFirstName(dto.getFirstName());
-        student.setLastName(dto.getLastName());
-        student.setDateOfBirth(dto.getDateOfBirth());
-        student.setEmail(dto.getEmail());
-        return student;
-    }
+    DTOclass toDTO(Student student);
+    Student toEntity(DTOclass dto);
 }
