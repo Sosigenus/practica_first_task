@@ -1,0 +1,10 @@
+PUT http://localhost:8080/api/v1/students/update_student
+Content-Type: application/json
+
+{
+  "id": 654,
+  "firstName": "Bao",
+  "lastName": "Conroy",
+  "dateOfBirth": "1991-01-01",
+  "email": "TJzthMRCxFi@alg.com"
+}
