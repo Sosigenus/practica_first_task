@@ -7,8 +7,7 @@ import practica.springstudentsz.model.Student;
 
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
-//    StudentMapper INSTANCE = Mappers.getMapper(StudentMapper.class);
-
     DTOclass toDTO(Student student);
     Student toEntity(DTOclass dto);
 }
+
