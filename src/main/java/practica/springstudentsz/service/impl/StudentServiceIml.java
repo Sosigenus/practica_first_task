@@ -18,7 +18,7 @@ import java.util.List;
 @Primary
 public class StudentServiceIml implements StudentService {
     private final StudentRepository repository;
-    private final StudentMapper studentMapper; // Внедряем интерфейс напрямую
+    private final StudentMapper studentMapper;
 
     @Override
     public List<DTOclass> findAllStudent() {
@@ -48,12 +48,12 @@ public class StudentServiceIml implements StudentService {
             throw new IllegalArgumentException("Студент с таким email не найден!");
         }
 
-        existingStudent.setFirstName(dto.getFirstName());
-        existingStudent.setLastName(dto.getLastName());
-        existingStudent.setDateOfBirth(dto.getDateOfBirth());
 
-        Student updated = repository.save(existingStudent);
-        return studentMapper.toDTO(updated);
+        Student updatedStudent = studentMapper.toEntity(dto);
+
+
+        Student savedStudent = repository.save(updatedStudent);
+        return studentMapper.toDTO(savedStudent);
     }
 
     @Override

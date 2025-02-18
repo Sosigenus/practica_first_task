@@ -1,6 +1,7 @@
 package practica.springstudentsz.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import practica.springstudentsz.dto.DTOclass;
 import practica.springstudentsz.model.Student;
@@ -9,5 +10,6 @@ import practica.springstudentsz.model.Student;
 public interface StudentMapper {
     DTOclass toDTO(Student student);
     Student toEntity(DTOclass dto);
+
 }
 
