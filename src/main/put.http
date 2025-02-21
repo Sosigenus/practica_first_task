@@ -2,8 +2,8 @@ PUT http://localhost:8080/api/v1/students/update_student
 Content-Type: application/json
 
 {
-  "firstName": "dddddo",
-  "lastName": "Conroy",
-  "dateOfBirth": "1991-01-01",
-  "email": "OyVNSd45qIZm9R0L@AvqlOmD.io"
+  "firstName": "Edit1",
+  "lastName": "fdsfds",
+  "dateOfBirth": "1981-01-01",
+  "email": "vhqvsfCgZTTVu@naV.cn"
 }

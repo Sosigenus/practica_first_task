@@ -1,10 +1,13 @@
 package practica.springstudentsz.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import practica.springstudentsz.dto.DTOclass;
 import practica.springstudentsz.mapper.StudentMapper;
 import practica.springstudentsz.model.Student;
 import practica.springstudentsz.repository.MemoryStudentFun;
 import practica.springstudentsz.service.StudentService;
+import org.springframework.data.domain.PageImpl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,24 @@ public class MemoryStudentService implements StudentService {
 
     private final MemoryStudentFun repository;
     private final StudentMapper studentMapper;
+
+    @Override
+    public Page<DTOclass> findAllStudentsWithFilters(String firstName, String lastName, String email, Pageable pageable) {
+        List<DTOclass> filteredStudents = repository.findAllStudent().stream()
+                .filter(student -> (firstName == null || student.getFirstName().contains(firstName)))
+                .filter(student -> (lastName == null || student.getLastName().contains(lastName)))
+                .filter(student -> (email == null || student.getEmail().contains(email)))
+                .map(studentMapper::toDTO)
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredStudents.size());
+
+        List<DTOclass> pageContent = filteredStudents.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, filteredStudents.size());
+    }
+
+
 
     @Override
     public List<DTOclass> findAllStudent() {

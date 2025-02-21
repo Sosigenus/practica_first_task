@@ -1,1 +1,9 @@
-GET http://localhost:8080/api/v1/students/bDR7HR54Fdac@lneY.io
+
+#Поиск по почте
+#GET http://localhost:8080/api/v1/students/bDR7HR54Fdac@lneY.io
+
+#фильтрация
+#GET http://localhost:8080//api/v1/students?firstName=Rae
+
+#пагинация
+GET http://localhost:8080/api/v1/students?page=1&size=5

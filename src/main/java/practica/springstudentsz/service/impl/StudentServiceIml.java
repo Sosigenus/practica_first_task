@@ -10,6 +10,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
+
 
 import java.util.List;
 
@@ -19,6 +24,7 @@ import java.util.List;
 public class StudentServiceIml implements StudentService {
     private final StudentRepository repository;
     private final StudentMapper studentMapper;
+
 
     @Override
     public List<DTOclass> findAllStudent() {
@@ -43,22 +49,45 @@ public class StudentServiceIml implements StudentService {
 
     @Override
     public DTOclass updateStudent(DTOclass dto) {
+
         Student existingStudent = repository.findStudentByEmail(dto.getEmail());
+
         if (existingStudent == null) {
             throw new IllegalArgumentException("Студент с таким email не найден!");
         }
 
+        studentMapper.updateStudentFromDto(dto, existingStudent);
+        Student savedStudent = repository.save(existingStudent);
 
-        Student updatedStudent = studentMapper.toEntity(dto);
-
-
-        Student savedStudent = repository.save(updatedStudent);
         return studentMapper.toDTO(savedStudent);
     }
+
 
     @Override
     @Transactional
     public void deleteStudent(String email) {
         repository.deleteByEmail(email);
+    }
+
+    @Override
+    public Page<DTOclass> findAllStudentsWithFilters(String firstName, String lastName, String email, Pageable pageable) {
+        Specification<Student> spec = Specification.where(null);
+
+        if (firstName != null && !firstName.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(root.get("firstName"), "%" + firstName + "%"));
+        }
+
+        if (lastName != null && !lastName.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(root.get("lastName"), "%" + lastName + "%"));
+        }
+
+        if (email != null && !email.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(root.get("email"), "%" + email + "%"));
+        }
+
+        return repository.findAll(spec, pageable).map(studentMapper::toDTO);
     }
 }
