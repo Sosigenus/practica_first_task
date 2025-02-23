@@ -2,7 +2,10 @@ package practica.springstudentsz.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import practica.springstudentsz.dto.DTOclass;
+import practica.springstudentsz.model.Student;
+
 import java.util.List;
 
 public interface StudentService {
@@ -11,5 +14,5 @@ public interface StudentService {
     DTOclass findByEmail(String email);
     DTOclass updateStudent(DTOclass dto);
     void deleteStudent(String email);
-    Page<DTOclass> findAllStudentsWithFilters(String firstName, String lastName, String email, Pageable pageable);
+    Page<DTOclass> findAllStudentsWithFilters(Specification<Student> spec, Pageable pageable);
 }

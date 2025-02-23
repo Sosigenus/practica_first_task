@@ -2,13 +2,14 @@ package practica.springstudentsz.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import practica.springstudentsz.dto.DTOclass;
 import practica.springstudentsz.mapper.StudentMapper;
 import practica.springstudentsz.model.Student;
 import practica.springstudentsz.repository.MemoryStudentFun;
+import practica.springstudentsz.repository.StudentRepository;
 import practica.springstudentsz.service.StudentService;
 import org.springframework.data.domain.PageImpl;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,30 +20,25 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class MemoryStudentService implements StudentService {
 
-    private final MemoryStudentFun repository;
+    private final StudentRepository repository; // Используем репозиторий для базы данных
     private final StudentMapper studentMapper;
 
     @Override
-    public Page<DTOclass> findAllStudentsWithFilters(String firstName, String lastName, String email, Pageable pageable) {
-        List<DTOclass> filteredStudents = repository.findAllStudent().stream()
-                .filter(student -> (firstName == null || student.getFirstName().contains(firstName)))
-                .filter(student -> (lastName == null || student.getLastName().contains(lastName)))
-                .filter(student -> (email == null || student.getEmail().contains(email)))
+    public Page<DTOclass> findAllStudentsWithFilters(Specification<Student> spec, Pageable pageable) {
+        // Используем findAll с Specification для работы с фильтрацией
+        Page<Student> studentPage = repository.findAll(spec, pageable);
+
+        // Преобразуем страницу студентов в DTO
+        List<DTOclass> studentDtos = studentPage.getContent().stream()
                 .map(studentMapper::toDTO)
                 .collect(Collectors.toList());
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), filteredStudents.size());
-
-        List<DTOclass> pageContent = filteredStudents.subList(start, end);
-        return new PageImpl<>(pageContent, pageable, filteredStudents.size());
+        return new PageImpl<>(studentDtos, pageable, studentPage.getTotalElements());
     }
-
-
 
     @Override
     public List<DTOclass> findAllStudent() {
-        return repository.findAllStudent()
+        return repository.findAll()
                 .stream()
                 .map(studentMapper::toDTO)
                 .collect(Collectors.toList());
@@ -51,33 +47,33 @@ public class MemoryStudentService implements StudentService {
     @Override
     public DTOclass saveStudent(DTOclass dto) {
         Student student = studentMapper.toEntity(dto);
-        Student saved = repository.saveStudent(student);
+        Student saved = repository.save(student);
         return studentMapper.toDTO(saved);
     }
 
     @Override
     public DTOclass findByEmail(String email) {
-        Student student = repository.findByEmail(email);
-        return student != null ? studentMapper.toDTO(student) : null;
+        Student student = repository.findStudentByEmail(email);
+        return studentMapper.toDTO(student);
     }
 
     @Override
     public DTOclass updateStudent(DTOclass dto) {
-        Student student = repository.findByEmail(dto.getEmail());
-        if (student == null) {
+
+        Student existingStudent = repository.findStudentByEmail(dto.getEmail());
+
+        if (existingStudent == null) {
             throw new IllegalArgumentException("Студент с таким email не найден!");
         }
 
-        student.setFirstName(dto.getFirstName());
-        student.setLastName(dto.getLastName());
-        student.setDateOfBirth(dto.getDateOfBirth());
+        studentMapper.updateStudentFromDto(dto, existingStudent);
+        Student savedStudent = repository.save(existingStudent);
 
-        Student updated = repository.updateStudent(student);
-        return studentMapper.toDTO(updated);
+        return studentMapper.toDTO(savedStudent);
     }
 
     @Override
     public void deleteStudent(String email) {
-        repository.deleteStudent(email);
+        repository.deleteByEmail(email);
     }
 }

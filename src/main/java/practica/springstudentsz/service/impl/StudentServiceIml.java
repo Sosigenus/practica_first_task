@@ -70,24 +70,7 @@ public class StudentServiceIml implements StudentService {
     }
 
     @Override
-    public Page<DTOclass> findAllStudentsWithFilters(String firstName, String lastName, String email, Pageable pageable) {
-        Specification<Student> spec = Specification.where(null);
-
-        if (firstName != null && !firstName.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(root.get("firstName"), "%" + firstName + "%"));
-        }
-
-        if (lastName != null && !lastName.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(root.get("lastName"), "%" + lastName + "%"));
-        }
-
-        if (email != null && !email.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(root.get("email"), "%" + email + "%"));
-        }
-
+    public Page<DTOclass> findAllStudentsWithFilters(Specification<Student> spec, Pageable pageable) {
         return repository.findAll(spec, pageable).map(studentMapper::toDTO);
     }
 }

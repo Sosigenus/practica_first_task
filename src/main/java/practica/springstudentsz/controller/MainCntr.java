@@ -4,13 +4,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import practica.springstudentsz.dto.DTOclass;
 
+import practica.springstudentsz.model.Student;
 import practica.springstudentsz.service.StudentService;
 
 
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
-
+import net.kaczmarzyk.spring.data.jpa.domain.*;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.*;
+import org.springframework.data.jpa.domain.Specification;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,11 +36,16 @@ public class MainCntr {
     )
     @GetMapping
     public Page<DTOclass> findAllStudents(
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String email,
-            Pageable pageable) {
-        return service.findAllStudentsWithFilters(firstName, lastName, email, pageable);
+            @Spec(path = "firstName", spec = Like.class) Specification<Student> firstNameSpec,
+            @Spec(path = "lastName", spec = Like.class) Specification<Student> lastNameSpec,
+            @Spec(path = "email", spec = Like.class) Specification<Student> emailSpec,
+            Pageable pageable
+    ) {
+        Specification<Student> spec = Specification.where(firstNameSpec)
+                .and(lastNameSpec)
+                .and(emailSpec);
+
+        return service.findAllStudentsWithFilters(spec, pageable);
     }
     @Operation(summary = "Получить всех студентов без фильтров")
     @GetMapping("/all")
