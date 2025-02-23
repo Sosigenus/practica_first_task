@@ -6,7 +6,7 @@
 #GET http://localhost:8080//api/v1/students?firstName=Benton
 
 #сортировка
-GET http://localhost:8080/api/v1/students?sort=lastName,asc
+#GET http://localhost:8080/api/v1/students?sort=lastName,asc
 
 #пагинация
-#GET http://localhost:8080/api/v1/students?sort=lastName,asc&page=0&size=5
+GET http://localhost:8080/api/v1/students?sort=lastName,asc&page=0&size=5

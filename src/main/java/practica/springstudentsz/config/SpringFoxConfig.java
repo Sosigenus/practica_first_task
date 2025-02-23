@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-/*@OpenAPIDefinition(
+@OpenAPIDefinition(
         info = @Info(
                 title = "API студентов",
                 description = "Описание API студентов с фильтрацией, сортировкой и пагинацией.",
@@ -24,7 +24,7 @@ import java.util.List;
                         url = "https://example.com"
                 )
         )
-)*/
+)
 public class SpringFoxConfig {
     @Bean
     public OpenAPI api() {
@@ -35,7 +35,10 @@ public class SpringFoxConfig {
                         )
                 )
                 .info(
-                        new io.swagger.v3.oas.models.info.Info().title("Our Students")
+                        new io.swagger.v3.oas.models.info.Info()
+                                .title("Our Students")
+                                .description("API для работы со студентами")
+                                .version("1.0")
                 );
     }
 }
