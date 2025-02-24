@@ -2,8 +2,11 @@ package practica.springstudentsz.service.impl;
 import practica.springstudentsz.dto.DTOclass;
 import practica.springstudentsz.mapper.StudentMapper;
 import practica.springstudentsz.model.Student;
+import practica.springstudentsz.repository.GroupRepository;
 import practica.springstudentsz.repository.StudentRepository;
 import practica.springstudentsz.service.StudentService;
+
+import practica.springstudentsz.model.Group;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -24,7 +27,7 @@ import java.util.List;
 public class StudentServiceIml implements StudentService {
     private final StudentRepository repository;
     private final StudentMapper studentMapper;
-
+    private final GroupRepository groupRepository;
 
     @Override
     public List<DTOclass> findAllStudent() {
@@ -35,8 +38,15 @@ public class StudentServiceIml implements StudentService {
     }
 
     @Override
-    public DTOclass saveStudent(DTOclass dto) {
+    public DTOclass saveStudent(DTOclass dto, Long groupId) {
         Student student = studentMapper.toEntity(dto);
+
+        // Ищем группу по ID
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Группа с ID " + groupId + " не найдена!"));
+
+        student.setGroup(group); // Присваиваем студенту группу
+
         Student saved = repository.save(student);
         return studentMapper.toDTO(saved);
     }
@@ -49,14 +59,27 @@ public class StudentServiceIml implements StudentService {
 
     @Override
     public DTOclass updateStudent(DTOclass dto) {
-
+        // Найдем студента по email
         Student existingStudent = repository.findStudentByEmail(dto.getEmail());
 
         if (existingStudent == null) {
             throw new IllegalArgumentException("Студент с таким email не найден!");
         }
 
+        // Найдем группу по имени
+        Group group = groupRepository.findByName(dto.getGroupName());
+
+        if (group == null) {
+            throw new IllegalArgumentException("Группа с таким названием не найдена!");
+        }
+
+        // Обновим группу студента
+        existingStudent.setGroup(group);
+
+        // Обновим другие данные студента
         studentMapper.updateStudentFromDto(dto, existingStudent);
+
+        // Сохраним обновленного студента
         Student savedStudent = repository.save(existingStudent);
 
         return studentMapper.toDTO(savedStudent);

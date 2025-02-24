@@ -1,3 +1,4 @@
+/*
 package practica.springstudentsz.repository;
 import practica.springstudentsz.model.Student;
 
@@ -49,3 +50,4 @@ public class MemoryStudentFun {
 
     }
 }
+*/

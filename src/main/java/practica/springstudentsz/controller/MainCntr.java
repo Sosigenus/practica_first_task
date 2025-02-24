@@ -34,28 +34,29 @@ public class MainCntr {
             summary = "Students info",
             description = "description students"
     )
+
     @GetMapping
     public Page<DTOclass> findAllStudents(
-            @Spec(path = "firstName", spec = Like.class) Specification<Student> firstNameSpec,
-            @Spec(path = "lastName", spec = Like.class) Specification<Student> lastNameSpec,
-            @Spec(path = "email", spec = Like.class) Specification<Student> emailSpec,
+            @And({
+                    @Spec(path = "firstName", spec = Like.class),
+                    @Spec(path = "lastName", spec = Like.class),
+                    @Spec(path = "email", spec = Like.class)
+            }) Specification<Student> spec,
             Pageable pageable
     ) {
-        Specification<Student> spec = Specification.where(firstNameSpec)
-                .and(lastNameSpec)
-                .and(emailSpec);
-
         return service.findAllStudentsWithFilters(spec, pageable);
     }
+
     @Operation(summary = "Получить всех студентов без фильтров")
     @GetMapping("/all")
     public List<DTOclass> findAllStudents() {
         return service.findAllStudent();
     }
 
-    @PostMapping("/save_student")
-    public DTOclass saveStudent(@RequestBody DTOclass dto) {
-        return service.saveStudent(dto);
+
+    @PostMapping("/save_student/{groupId}")
+    public DTOclass saveStudent(@RequestBody DTOclass dto, @PathVariable Long groupId) {
+        return service.saveStudent(dto, groupId);
     }
 
     @GetMapping("/{email}")

@@ -11,4 +11,7 @@ public class DTOclass {
     private String lastName;
     private LocalDate dateOfBirth;
     private String email;
+
+    private String groupName;
+
 }

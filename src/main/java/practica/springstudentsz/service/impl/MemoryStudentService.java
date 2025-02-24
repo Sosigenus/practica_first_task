@@ -1,3 +1,4 @@
+/*
 package practica.springstudentsz.service.impl;
 
 import org.springframework.data.domain.Page;
@@ -45,11 +46,11 @@ public class MemoryStudentService implements StudentService {
     }
 
     @Override
-    public DTOclass saveStudent(DTOclass dto) {
-        Student student = studentMapper.toEntity(dto);
-        Student saved = repository.save(student);
-        return studentMapper.toDTO(saved);
+    public DTOclass saveStudent(DTOclass dto, Long groupId) {
+        return saveStudent(dto); // groupId пока игнорируем
     }
+
+
 
     @Override
     public DTOclass findByEmail(String email) {
@@ -77,3 +78,4 @@ public class MemoryStudentService implements StudentService {
         repository.deleteByEmail(email);
     }
 }
+*/

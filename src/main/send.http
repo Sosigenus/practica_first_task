@@ -1,6 +1,6 @@
 //GET http://localhost:8080/api/v1/students
 
-POST http://localhost:8080/api/v1/students/save_student
+POST http://localhost:8080/api/v1/students/save_student/1
 Content-Type: application/json
 
 {

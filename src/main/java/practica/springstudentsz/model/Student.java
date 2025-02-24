@@ -1,11 +1,14 @@
 package practica.springstudentsz.model;
+import practica.springstudentsz.model.Group;
 
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.DeferredImportSelector;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,6 +17,11 @@ public class Student {
     @Id
     @GeneratedValue
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
+
     //@Column(name = "firstName")
     private String firstName;
     //@Column(name = "lastName")
