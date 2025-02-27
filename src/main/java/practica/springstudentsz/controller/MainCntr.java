@@ -40,12 +40,14 @@ public class MainCntr {
             @And({
                     @Spec(path = "firstName", spec = Like.class),
                     @Spec(path = "lastName", spec = Like.class),
-                    @Spec(path = "email", spec = Like.class)
+                    @Spec(path = "email", spec = Like.class),
+                    @Spec(path = "group.name", spec = Like.class) // Фильтр по названию группы
             }) Specification<Student> spec,
             Pageable pageable
     ) {
         return service.findAllStudentsWithFilters(spec, pageable);
     }
+
 
     @Operation(summary = "Получить всех студентов без фильтров")
     @GetMapping("/all")

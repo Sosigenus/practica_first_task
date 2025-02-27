@@ -9,4 +9,14 @@
 #GET http://localhost:8080/api/v1/students?sort=lastName,asc
 
 #пагинация
-GET http://localhost:8080/api/v1/students?sort=lastName,asc&page=0&size=5
+#GET http://localhost:8080/api/v1/students?sort=lastName,asc&page=0&size=5
+
+#фильтр по группе (выводит всю группу)
+#GET  http://localhost:8080/api/v1/students?group.name=Математика
+
+#сортировка по группе
+#GET http://localhost:8080/api/v1/students?sort=group.name,asc
+
+#сортировка по имени из группы "математика"
+GET http://localhost:8080/api/v1/students?group.name=Математика&sort=firstName,asc
+
