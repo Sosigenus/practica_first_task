@@ -2,10 +2,13 @@ package practica.springstudentsz.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import practica.springstudentsz.dto.BookDTO;
 import practica.springstudentsz.dto.DTOclass;
 
 import practica.springstudentsz.model.Student;
 import practica.springstudentsz.service.StudentService;
+
+import org.springframework.web.bind.annotation.*;
 
 
 import lombok.AllArgsConstructor;
@@ -76,6 +79,11 @@ public class MainCntr {
         service.deleteStudent(email);
     }
 
+    @Operation(summary = "Получить информацию о книге по ID")
+    @GetMapping("/book/{bookId}")
+    public BookDTO getBookById(@PathVariable Long bookId) {
+        return service.getBookById(bookId);
+    }
 
 }
 

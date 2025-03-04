@@ -1,4 +1,7 @@
 package practica.springstudentsz.service.impl;
+import org.springframework.web.client.RestTemplate;
+import practica.springstudentsz.client.BookClient;
+import practica.springstudentsz.dto.BookDTO;
 import practica.springstudentsz.dto.DTOclass;
 import practica.springstudentsz.mapper.StudentMapper;
 import practica.springstudentsz.model.Student;
@@ -28,6 +31,12 @@ public class StudentServiceIml implements StudentService {
     private final StudentRepository repository;
     private final StudentMapper studentMapper;
     private final GroupRepository groupRepository;
+    private final BookClient bookClient;
+
+
+    public BookDTO getBookById(Long bookId) {
+        return bookClient.getBookById(bookId);
+    }
 
     @Override
     public List<DTOclass> findAllStudent() {
@@ -96,4 +105,6 @@ public class StudentServiceIml implements StudentService {
     public Page<DTOclass> findAllStudentsWithFilters(Specification<Student> spec, Pageable pageable) {
         return repository.findAll(spec, pageable).map(studentMapper::toDTO);
     }
+
+
 }

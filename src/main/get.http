@@ -18,5 +18,14 @@
 #GET http://localhost:8080/api/v1/students?sort=group.name,asc
 
 #сортировка по имени из группы "математика"
-GET http://localhost:8080/api/v1/students?group.name=Математика&sort=firstName,asc
+#GET http://localhost:8080/api/v1/students?group.name=Математика&sort=firstName,asc
+
+
+GET http://localhost:8081/api/v1/students/book/3523?email=gm5Kk@IyAXs.cy
+
+###
+
+GET http://localhost:8081/api/v1/books/
+
+###
 
