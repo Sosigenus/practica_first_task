@@ -1,0 +1,33 @@
+server:
+    port: 8081
+
+spring:
+    application:
+        name: book_service
+    datasource:
+        url: jdbc:postgresql://localhost:5433/books_db
+        username: book_user
+        password: book_pass
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: none
+        show-sql: true
+    liquibase:
+        enabled: true
+        change-log: classpath:/db/changelog/db.changelog-master-books.yaml
+    kafka:
+
+        bootstrap-servers: localhost:9092
+        consumer:
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            group-id: notification-group
+            auto-offset-reset: earliest
+            properties:
+                spring.json.trusted.packages: "*"
+        producer:
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            retries: 3
+            acks: all

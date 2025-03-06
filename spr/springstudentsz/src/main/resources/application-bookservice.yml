@@ -1,0 +1,31 @@
+server:
+  port: 8081  # Порт для сервиса книг
+
+spring:
+  application:
+    name: bookservice  # Название сервиса
+  datasource:
+    url: jdbc:postgresql://localhost:5433/books_db
+    username: book_user
+    password: book_pass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master-books.yaml
+  kafka:
+
+    bootstrap-servers: localhost:9092
+    consumer:
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: notification-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      acks: all
