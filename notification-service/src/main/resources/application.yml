@@ -1,15 +1,14 @@
 server:
-    port: 8082
+  port: 8082  # Запускаем сервис на порту 8081
 
 spring:
-    application:
-        name: notification-service
-kafka:
-    bootstrap-servers: kafka:9092
+  kafka:
+    bootstrap-servers: localhost:9092  # Адрес Kafka-брокера
     consumer:
-        group-id: notification-group
-        auto-offset-reset: earliest
-        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-        value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-        properties:
-            spring.json.trusted.packages: "*"
+      group-id: notification-group  # Группа потребителей
+      auto-offset-reset: earliest  # Читаем с начала, если нет смещения
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"  # Разрешаем десериализацию любых пакетов
+        spring.json.value.default.type: "notification_service.model.Book"

@@ -1,7 +1,7 @@
 package book_service.service.impl;
 
 import book_service.dto.BookNotificationDTO;
-import book_service.kafka.BookKafkaProducer;
+import book_service.kafka.KafkaProducerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import book_service.dto.BookDTO;
@@ -18,8 +18,8 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
-    private final BookKafkaProducer bookKafkaProducer;
-    //private final KafkaProducer kafkaProducer;
+    private final KafkaProducerService  kafkaProducerService;
+
 
 
     @Override
@@ -37,14 +37,15 @@ public class BookServiceImpl implements BookService {
     public BookDTO addBook(BookDTO bookDTO) {
         Book book = bookMapper.toEntity(bookDTO);
         Book savedBook = bookRepository.save(book);
-
         BookNotificationDTO notificationDTO = BookNotificationDTO.builder()
                 .title(savedBook.getTitle())
                 .author(savedBook.getAuthor())
-                .message("New book")
+                .message("Книга добавлена")
                 .build();
 
-        bookKafkaProducer.sendNotification(notificationDTO);
+
+        kafkaProducerService.sendMessage("add_book", book);
+
         return bookMapper.toDTO(savedBook);
     }
 
