@@ -13,9 +13,12 @@ spring:
     gateway:
       routes:
         - id: springstudentsz
-          uri: lb://springstudentsz
+          uri: http://localhost:8080
           predicates:
             - Path=/students/**
+          filters:
+            # Если вызываем URL вида /students/api/v1/students, то удаляем префикс "/students"
+            - RewritePath=/students/(?<remaining>.*), /${remaining}
         - id: book_service
           uri: lb://book_service
           predicates:
@@ -29,7 +32,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"  # Включает все эндпоинты actuator, включая /gateway/routes
+        include: "*"
   endpoint:
     gateway:
-      enabled: true  # Включает информацию о маршрутах Gateway
+      enabled: true
