@@ -1,0 +1,35 @@
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: springstudentsz
+          uri: lb://springstudentsz
+          predicates:
+            - Path=/students/**
+        - id: book_service
+          uri: lb://book_service
+          predicates:
+            - Path=/books/**
+        - id: notification
+          uri: lb://notification
+          predicates:
+            - Path=/notifications/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Включает все эндпоинты actuator, включая /gateway/routes
+  endpoint:
+    gateway:
+      enabled: true  # Включает информацию о маршрутах Gateway

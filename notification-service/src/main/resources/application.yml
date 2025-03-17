@@ -2,6 +2,8 @@ server:
   port: 8082  # Запускаем сервис на порту 8081
 
 spring:
+  application:
+    name: notification
   kafka:
     bootstrap-servers: localhost:9092  # Адрес Kafka-брокера
     consumer:
@@ -12,3 +14,8 @@ spring:
       properties:
         spring.json.trusted.packages: "*"  # Разрешаем десериализацию любых пакетов
         spring.json.value.default.type: "notification_service.model.Book"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
