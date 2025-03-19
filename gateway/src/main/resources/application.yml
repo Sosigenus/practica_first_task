@@ -7,26 +7,51 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8084/realms/gateway
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8084/realms/gateway
+        registration:
+          gateway-client:
+            provider: keycloak
+            client-id: gateway-client
+            client-secret: rXWEd6f48hL71dXT6wOylgEUqieWuyIJ
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+
   application:
     name: api-gateway
   cloud:
     gateway:
       routes:
+
         - id: springstudentsz
-          uri: http://localhost:8080
+          uri: lb://springstudentsz
           predicates:
             - Path=/students/**
           filters:
             # Если вызываем URL вида /students/api/v1/students, то удаляем префикс "/students"
             - RewritePath=/students/(?<remaining>.*), /${remaining}
+            - TokenRelay=
         - id: book_service
           uri: lb://book_service
           predicates:
             - Path=/books/**
+          filters:
+            - RewritePath=/books/(?<remaining>.*), /${remaining}
+            - TokenRelay=
         - id: notification
           uri: lb://notification
           predicates:
             - Path=/notifications/**
+          filters:
+            - RewritePath=/notifications/(?<remaining>.*), /${remaining}
+            - TokenRelay=
 
 management:
   endpoints:
@@ -36,3 +61,4 @@ management:
   endpoint:
     gateway:
       enabled: true
+
